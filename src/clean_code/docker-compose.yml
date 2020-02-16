@@ -1,0 +1,20 @@
+version: '3.6'
+
+services:
+  app:
+    build: .
+    working_dir: /app
+    command: rspec
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+  redis:
+    image: "redis:alpine"
+    container_name: redis-cq
+    ports:
+      - "6379:6379"
+    volumes:
+      - $PWD/redis-data:/data:delegated
+volumes:
+  redis:
