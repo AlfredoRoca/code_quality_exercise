@@ -1,0 +1,9 @@
+version: '3.6'
+
+services:
+  app:
+    build: .
+    working_dir: /app
+    command: /bin/bash
+    volumes: # Volumes create a volume to share thing between host and container
+      - .:/app  # shares current folder as app folder in my app folder inside container
