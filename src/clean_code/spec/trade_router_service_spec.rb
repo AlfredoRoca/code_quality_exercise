@@ -7,9 +7,6 @@ require_relative "../trade_router_service.rb"
 require_relative "../trade_execution_service.rb"
 
 RSpec.describe TradeRouterService do
-  LIQUIDITY_PROVIDER_A = "lpA"
-  LIQUIDITY_PROVIDER_B = "lpB"
-  LIQUIDITY_PROVIDER_C = "lpC"
 
   describe '#lp' do
     let(:currency) { 'USD' }

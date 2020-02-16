@@ -12,7 +12,7 @@ class TradeIssuerHttpService
   def issuer
     case @lp
     when LIQUIDITY_PROVIDER_C
-      LpCTradeIssuerService.new
+      LpCTradeIssuerService
     end
   end
 
