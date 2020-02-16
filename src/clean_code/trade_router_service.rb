@@ -10,9 +10,9 @@ class TradeRouterService
 
   def lp
     case @usd_amount
-    when 0..10_000
+    when 0..9_999
       LIQUIDITY_PROVIDER_C
-    when 10_000..100_000
+    when 10_000..99_999
       LIQUIDITY_PROVIDER_B
     else
       LIQUIDITY_PROVIDER_A
@@ -34,5 +34,6 @@ class TradeRouterService
 
   def amount_in_usd(amount, currency)
     # it would return the integer amount in USD
+    amount
   end
 end
