@@ -7,9 +7,6 @@ require_relative "../trade_router_service.rb"
 require_relative "../trade_execution_service.rb"
 
 RSpec.describe TradeRouterService do
-  LIQUIDITY_PROVIDER_A = "lpA"
-  LIQUIDITY_PROVIDER_B = "lpB"
-  LIQUIDITY_PROVIDER_C = "lpC"
 
   describe '#lp' do
     let(:currency) { 'USD' }
@@ -32,9 +29,8 @@ RSpec.describe TradeRouterService do
   describe '#issuer' do
     let(:currency) { 'USD' }
 
-    it 'returns the issuer for lpC', :aggregate_failures do
-      expect(described_class.new(10, currency).trade_issuer).to be_a LpCTradeIssuerService
-      expect(described_class.new(10, currency).trade_issuer).to be_a TradeIssuerHttpService
+    it 'returns the issuer for lpC' do
+      expect(described_class.new(10, currency).trade_issuer).to be_an_instance_of LpCTradeIssuerService
     end
 
     it 'returns the issuer for lpB', :aggregate_failures do

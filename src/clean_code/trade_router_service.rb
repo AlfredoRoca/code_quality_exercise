@@ -26,7 +26,7 @@ class TradeRouterService
     when LIQUIDITY_PROVIDER_B
       LpBTradeIssuerService.new(LIQUIDITY_PROVIDER_B)
     when LIQUIDITY_PROVIDER_C
-      LpCTradeIssuerService.new(LIQUIDITY_PROVIDER_C)
+      LpCTradeIssuerService.new()
     else
       raise "unknown liquidity provider"
     end
