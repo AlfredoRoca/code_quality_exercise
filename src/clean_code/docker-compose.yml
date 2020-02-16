@@ -4,6 +4,17 @@ services:
   app:
     build: .
     working_dir: /app
-    command: /bin/bash
-    volumes: # Volumes create a volume to share thing between host and container
-      - .:/app  # shares current folder as app folder in my app folder inside container
+    command: rspec
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+  redis:
+    image: "redis:alpine"
+    container_name: redis-cq
+    ports:
+      - "6379:6379"
+    volumes:
+      - $PWD/redis-data:/data:delegated
+volumes:
+  redis:
