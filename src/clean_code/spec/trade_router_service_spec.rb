@@ -1,4 +1,10 @@
-require_relative "../{*}.rb"
+require_relative "../trade_issuer_fix_service.rb"
+require_relative "../trade_issuer_http_service.rb"
+require_relative "../lp_a_trade_issuer_service.rb"
+require_relative "../lp_b_trade_issuer_service.rb"
+require_relative "../lp_c_trade_issuer_service.rb"
+require_relative "../trade_router_service.rb"
+require_relative "../trade_execution_service.rb"
 
 RSpec.describe TradeRouterService do
   LIQUIDITY_PROVIDER_A = "lpA"
@@ -26,8 +32,19 @@ RSpec.describe TradeRouterService do
   describe '#issuer' do
     let(:currency) { 'USD' }
 
-    it 'returns the issuer for lpA' do
+    it 'returns the issuer for lpC', :aggregate_failures do
       expect(described_class.new(10, currency).trade_issuer).to be_a LpCTradeIssuerService
+      expect(described_class.new(10, currency).trade_issuer).to be_a TradeIssuerHttpService
+    end
+
+    it 'returns the issuer for lpB', :aggregate_failures do
+      expect(described_class.new(50_000, currency).trade_issuer).to be_a LpBTradeIssuerService
+      expect(described_class.new(50_000, currency).trade_issuer).to be_a TradeIssuerFixService
+    end
+
+    it 'returns the issuer for lpA', :aggregate_failures do
+      expect(described_class.new(200_000, currency).trade_issuer).to be_a LpATradeIssuerService
+      expect(described_class.new(200_000, currency).trade_issuer).to be_a TradeIssuerFixService
     end
   end
 end

@@ -1,5 +1,6 @@
 class TradeIssuerHttpService
-  include HTTParty
+  require 'httparty'
+
   LIQUIDITY_PROVIDER_C = "lpC"
 
   # TradeIssuerHttpService.new(lp).issue(side, size, currency, counter_currency, date, price, order_id)
@@ -11,7 +12,7 @@ class TradeIssuerHttpService
   def issuer
     case @lp
     when LIQUIDITY_PROVIDER_C
-      LpCTradeIssuerService
+      LpCTradeIssuerService.new
     end
   end
 

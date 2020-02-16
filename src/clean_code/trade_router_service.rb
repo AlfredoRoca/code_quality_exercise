@@ -22,11 +22,11 @@ class TradeRouterService
   def trade_issuer
     case @lp
     when LIQUIDITY_PROVIDER_A
-      TradeIssuerFixService.new(LIQUIDITY_PROVIDER_A)
+      LpATradeIssuerService.new(LIQUIDITY_PROVIDER_A)
     when LIQUIDITY_PROVIDER_B
-      TradeIssuerFixService.new(LIQUIDITY_PROVIDER_B)
+      LpBTradeIssuerService.new(LIQUIDITY_PROVIDER_B)
     when LIQUIDITY_PROVIDER_C
-      TradeIssuerHttpService.new(LIQUIDITY_PROVIDER_C)
+      LpCTradeIssuerService.new(LIQUIDITY_PROVIDER_C)
     else
       raise "unknown liquidity provider"
     end
