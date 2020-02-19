@@ -1,17 +1,21 @@
+require 'logger'
+require_relative './errors.rb'
+require_relative './trade_router_service.rb'
+
 class TradeExecutionService
-  include HTTParty
-  
   def initialize
+    logger = Logger.new('app.log', 10, 10240000)
   end
 
-  def execute_order(side, size, currency, counter_currency, date, price, order_id)
-    router = TradeRouterService.new(amount, currency)
+  def execute_order(**params)
+    return { success: false, error: 'Invalid parameters for an order' } if ParametersValidationService.new(params).invalid?
+
+    router = TradeRouterService.new(params[:amount], params[:currency])
     trade_issuer = router.trade_issuer
-    trade_issuer.issue(side, size, currency, counter_currency, date, price, order_id)
+    trade_issuer.issue(params)
 
   rescue => error
-    File.open('path_to_log_file/errors.log', 'a') do |f|
-      f.puts "Execution of #{order_id} failed."
-    end
+    logger.error(error)
+    { success: false, error: error.message }
   end
 end
