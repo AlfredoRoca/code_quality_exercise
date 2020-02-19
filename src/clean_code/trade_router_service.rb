@@ -1,7 +1,7 @@
 class TradeRouterService
-  LIQUIDITY_PROVIDER_A = "lpA"
-  LIQUIDITY_PROVIDER_B = "lpB"
-  LIQUIDITY_PROVIDER_C = "lpC"
+  LIQUIDITY_PROVIDER_A = 'lpA'
+  LIQUIDITY_PROVIDER_B = 'lpB'
+  LIQUIDITY_PROVIDER_C = 'lpC'
 
   def initialize(amount, currency)
     @usd_amount = amount_in_usd(amount, currency)
@@ -14,21 +14,23 @@ class TradeRouterService
       LIQUIDITY_PROVIDER_C
     when 10_000..99_999
       LIQUIDITY_PROVIDER_B
-    else
+    when (100_000..)
       LIQUIDITY_PROVIDER_A
+    else
+      raise 'unknown liquidity provider'
     end
   end
 
   def trade_issuer
     case @lp
     when LIQUIDITY_PROVIDER_A
-      LpATradeIssuerService.new(LIQUIDITY_PROVIDER_A)
+      LpATradeIssuerService.new
     when LIQUIDITY_PROVIDER_B
-      LpBTradeIssuerService.new(LIQUIDITY_PROVIDER_B)
+      LpBTradeIssuerService.new
     when LIQUIDITY_PROVIDER_C
-      LpCTradeIssuerService.new()
+      LpCTradeIssuerService.new
     else
-      raise "unknown liquidity provider"
+      raise 'unknown liquidity provider'
     end
   end
 
