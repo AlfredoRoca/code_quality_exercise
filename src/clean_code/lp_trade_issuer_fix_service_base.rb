@@ -16,12 +16,11 @@ class LpTradeIssuerFixServiceBase
     raise 'Not implemented'
   end
 
-  def check_fix_service_status(lp)
-    # it will throw an Exception if there is no connectivity with
-    # this LP fix service
+  def redis_health_check_ok?
     @connection.ping
+    true
   rescue => error
-    raise FixServiceDown
+    false
   end
 
   def wait_for_fix_response(order_id, lp)
@@ -37,6 +36,6 @@ class LpTradeIssuerFixServiceBase
     @connection.rpush queue, redis_msg
 
   rescue => error
-    raise FixServiceDown
+    raise RedisConnectionDown
   end
 end

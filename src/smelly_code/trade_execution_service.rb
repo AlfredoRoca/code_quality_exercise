@@ -1,7 +1,7 @@
 #
-# This service provides an interface for order routing AND trade execution  
+# This service provides an interface for order routing AND trade execution
 # using different avaiable Liquidity Providers (aka "LPs") using two different
-# protocols: REST (http) and FIX (Financial Information eXchange) 
+# protocols: REST (http) and FIX (Financial Information eXchange)
 #
 # execution_service = TradeExecutionService.new
 # execution_service.execute_order(
@@ -12,11 +12,11 @@
 
 class TradeExecutionService
   include HTTParty
-  
+
   LIQUIDITY_PROVIDER_A = "lpA"
   LIQUIDITY_PROVIDER_B = "lpB"
   LIQUIDITY_PROVIDER_C = "lpC"
-    
+
   def initialize
     @connection = Redis.new(url: 'my_redis_host_url')
   end
@@ -24,7 +24,7 @@ class TradeExecutionService
   def execute_order(side, size, currency, counter_currency, date, price, order_id)
     amount = amount_in_usd(size, currency)
 
-    if amount < 10_000.to_money(USD) 
+    if amount < 10_000.to_money(USD)
       lp = LIQUIDITY_PROVIDER_C
     elsif (amount >= 10_000.to_money(USD) && amount < 100_000.to_money(USD))
       lp = LIQUIDITY_PROVIDER_B
@@ -44,14 +44,14 @@ class TradeExecutionService
   end
 
   def issue_rest_market_trade(side, size, currency, counter_currency, date, price, order_id)
-    payload = {        
+    payload = {
       order_type: 'market',
-      order_id: order_id, 
-      side: side, 
-      order_qty: size, 
+      order_id: order_id,
+      side: side,
+      order_qty: size,
       ccy1: currency,
       ccy2: counter_currency,
-      value_date: date, 
+      value_date: date,
       price: price
     }
     json_payload = JSON.dump(payload)
@@ -68,22 +68,22 @@ class TradeExecutionService
     check_fix_service_status(lp)
     if lp == LIQUIDITY_PROVIDER_A
       send_to_redis(
-        :lp_acme_provider_queue, 
+        :lp_acme_provider_queue,
         'fix:order:execute',
-        clOrdID: order_id, 
-        side: side, 
-        orderQty: size, 
-        ccy1: currency, 
+        clOrdID: order_id,
+        side: side,
+        orderQty: size,
+        ccy1: currency,
         ccy2: counter_currency,
-        value_date: date, 
+        value_date: date,
         price: price
       )
-    else 
+    else
       send_to_redis(
-        :lp_wall_street_provider_queue, 
+        :lp_wall_street_provider_queue,
         'fix:executetrade',
         ordType: 'D',
-        clOrdID: order_id, 
+        clOrdID: order_id,
         side: side,
         orderQty: size,
         currency_1: currency,
@@ -98,7 +98,7 @@ class TradeExecutionService
   end
 
   def send_to_redis(queue, command, payload = nil)
-    redis_msg = payload == nil ? command : "#{command}::#{JSON.dump(payload)}" 
+    redis_msg = payload == nil ? command : "#{command}::#{JSON.dump(payload)}"
     @connection.rpush queue, redis_msg
   end
 
@@ -116,7 +116,7 @@ class TradeExecutionService
 
   def check_fix_service_status(lp)
     # it will throw an Exception if there is no connectivity with
-    # this LP fix service  
+    # this LP fix service
   end
 
   def amount_in_usd(size, currency)
