@@ -1,5 +1,12 @@
+require 'httparty'
+
 class LpCTradeIssuerService
   def initialize
+    @lp = LIQUIDITY_PROVIDER_C
+  end
+
+  def issue(side, size, currency, counter_currency, date, price, order_id)
+    issue_rest_market_trade(side, size, currency, counter_currency, date, price, order_id)
   end
 
   def issue_rest_market_trade(side, size, currency, counter_currency, date, price, order_id)
@@ -14,12 +21,14 @@ class LpCTradeIssuerService
       price: price
     }
     json_payload = JSON.dump(payload)
-    response = HTTParty.post('http://lp_c_host/trade', body: json_payload).response
-    if response.code.to_i == 200
-      handle_rest_trade_confirmation(response)
-    else
-      raise 'REST order execution failed.'
-    end
+    response = HTTParty.post('http://lp_c_host/trade', body: json_payload)
+
+    handle_rest_trade_confirmation(response.parsed_response)
+
+    { success: response.success?, error: nil }
+
+  rescue => error
+    { success: false, error: error.message }
   end
 
   def handle_rest_trade_confirmation(rest_trade_confirmation)

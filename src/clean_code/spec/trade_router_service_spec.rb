@@ -1,5 +1,4 @@
-require_relative "../trade_issuer_fix_service.rb"
-require_relative "../trade_issuer_http_service.rb"
+require_relative "../lp_trade_issuer_fix_service_base.rb"
 require_relative "../lp_a_trade_issuer_service.rb"
 require_relative "../lp_b_trade_issuer_service.rb"
 require_relative "../lp_c_trade_issuer_service.rb"
@@ -24,23 +23,30 @@ RSpec.describe TradeRouterService do
     it 'returns lpA when amount is greater than 100K USD' do
       expect(described_class.new(100_000, currency).lp).to eq LIQUIDITY_PROVIDER_A
     end
+
+    it 'raises an error if amount is negative' do
+      expect { described_class.new(-1, currency).lp }.to raise_error('unknown liquidity provider')
+    end
   end
 
   describe '#issuer' do
     let(:currency) { 'USD' }
 
-    it 'returns the issuer for lpC' do
-      expect(described_class.new(10, currency).trade_issuer).to be_an_instance_of LpCTradeIssuerService
+    shared_examples_for :trade_issuer do |amount, issuer_class, issuer_parent_class|
+      let(:issuer) { described_class.new(amount, currency).trade_issuer }
+
+      it 'returns the proper issuer', :aggregate_failures do
+        expect(issuer).to be_an_instance_of issuer_class
+        expect(issuer.class.superclass).to be issuer_parent_class
+      end
     end
 
-    it 'returns the issuer for lpB', :aggregate_failures do
-      expect(described_class.new(50_000, currency).trade_issuer).to be_a LpBTradeIssuerService
-      expect(described_class.new(50_000, currency).trade_issuer).to be_a TradeIssuerFixService
-    end
+    it_behaves_like :trade_issuer, 10, LpCTradeIssuerService, Object
+    it_behaves_like :trade_issuer, 50_000, LpBTradeIssuerService, LpTradeIssuerFixServiceBase
+    it_behaves_like :trade_issuer, 250_000, LpATradeIssuerService, LpTradeIssuerFixServiceBase
 
-    it 'returns the issuer for lpA', :aggregate_failures do
-      expect(described_class.new(200_000, currency).trade_issuer).to be_a LpATradeIssuerService
-      expect(described_class.new(200_000, currency).trade_issuer).to be_a TradeIssuerFixService
+    it 'raises an error for an unknown LP' do
+      expect { described_class.new(-1, currency).trade_issuer }.to raise_error('unknown liquidity provider')
     end
   end
 end
