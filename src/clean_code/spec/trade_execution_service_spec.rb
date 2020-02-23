@@ -1,10 +1,3 @@
-require_relative "../lp_trade_issuer_fix_service_base.rb"
-require_relative "../lp_a_trade_issuer_service.rb"
-require_relative "../lp_b_trade_issuer_service.rb"
-require_relative "../lp_c_trade_issuer_service.rb"
-require_relative "../trade_execution_service.rb"
-require 'mock_redis'
-
 RSpec.describe TradeExecutionService do
   describe '#execute_order' do
     context 'when Redis or the Fix Service are down' do
@@ -48,6 +41,7 @@ RSpec.describe TradeExecutionService do
           price: '1.1345',
           order_id: 'X-A213FFL'
         }
+        expect_any_instance_of(LpTradeIssuerFixServiceBase).to receive(:handle_fix_trade_confirmation) { { success: true, error: nil } }
 
         expect(described_class.new.execute_order(payload)).to include(success: true)
       end

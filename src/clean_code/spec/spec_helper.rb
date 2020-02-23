@@ -15,8 +15,15 @@
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
 
-  require('support/common_constants.rb')
   require 'pry'
+  require 'mock_redis'
+  Dir['./spec/support/**/*.rb'].each { |file| require file }
+  require "./lib/lp_trade_issuer_fix_service_base.rb"
+  require "./lib/lp_a_trade_issuer_service.rb"
+  require "./lib/lp_b_trade_issuer_service.rb"
+  require "./lib/lp_c_trade_issuer_service.rb"
+  require "./lib/trade_execution_service.rb"
+  require './lib/parameters_validation_service.rb'
 
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest

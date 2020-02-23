@@ -1,9 +1,3 @@
-require_relative "../lp_trade_issuer_fix_service_base.rb"
-require_relative "../lp_a_trade_issuer_service.rb"
-require_relative "../lp_b_trade_issuer_service.rb"
-require_relative "../lp_c_trade_issuer_service.rb"
-require_relative "../trade_execution_service.rb"
-
 RSpec.describe TradeRouterService do
 
   describe '#amount_in_usd(amount, currency, rate)' do

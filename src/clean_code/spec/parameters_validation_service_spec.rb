@@ -1,4 +1,3 @@
-require_relative '../parameters_validation_service.rb'
 require 'date'
 
 RSpec.shared_examples :valid_parameters do
