@@ -28,7 +28,6 @@ class LpBTradeIssuerService < LpTradeIssuerFixServiceBase
         response = wait_for_fix_response(params[:order_id], @lp)
         handle_fix_trade_confirmation(response)
 
-        { success: true, error: nil }
       rescue => error
         { success: false, error: error }
       end

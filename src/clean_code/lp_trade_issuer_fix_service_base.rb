@@ -28,6 +28,11 @@ class LpTradeIssuerFixServiceBase
 
   def handle_fix_trade_confirmation(fix_trade_confirmation)
     # trade confirmation will be persisted in db
+    if fix_trade_confirmation[:success]
+      { success: true, error: nil }
+    else
+      { success: false, error: TradeExecutionError }
+    end
   end
 
   def send_to_redis(queue, command, payload = nil)
