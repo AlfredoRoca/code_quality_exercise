@@ -5,21 +5,22 @@ class LpCTradeIssuerService
     @lp = LIQUIDITY_PROVIDER_C
   end
 
-  def issue(side, size, currency, counter_currency, date, price, order_id)
-    issue_rest_market_trade(side, size, currency, counter_currency, date, price, order_id)
+  def issue(**params)
+    issue_rest_market_trade(params)
   end
 
-  def issue_rest_market_trade(side, size, currency, counter_currency, date, price, order_id)
+  def issue_rest_market_trade(**params)
     payload = {
       order_type: 'market',
-      order_id: order_id,
-      side: side,
-      order_qty: size,
-      ccy1: currency,
-      ccy2: counter_currency,
-      value_date: date,
-      price: price
+      side: params[:side],
+      order_qty: params[:amount],
+      ccy1: params[:currency],
+      ccy2: params[:counter_currency],
+      value_date: params[:date],
+      price: params[:price],
+      order_id: params[:order_id]
     }
+
     json_payload = JSON.dump(payload)
     response = HTTParty.post('http://lp_c_host/trade', body: json_payload)
 

@@ -2,10 +2,19 @@ require_relative "../lp_trade_issuer_fix_service_base.rb"
 require_relative "../lp_a_trade_issuer_service.rb"
 require_relative "../lp_b_trade_issuer_service.rb"
 require_relative "../lp_c_trade_issuer_service.rb"
-require_relative "../trade_router_service.rb"
 require_relative "../trade_execution_service.rb"
 
 RSpec.describe TradeRouterService do
+
+  describe '#amount_in_usd(amount, currency, rate)' do
+    it 'returns the amount if the currency is USD' do
+      expect(described_class.new(100, 'usd', 1.2).amount_in_usd).to eq 100
+    end
+
+    it 'returns the converted amount if the currency is not USD' do
+      expect(described_class.new(100, 'eur', 1.2).amount_in_usd).to eq 120
+    end
+  end
 
   describe '#lp' do
     let(:currency) { 'USD' }
@@ -29,15 +38,15 @@ RSpec.describe TradeRouterService do
     end
   end
 
-  describe '#issuer' do
+  describe '#trade_issuer' do
     let(:currency) { 'USD' }
 
     shared_examples_for :trade_issuer do |amount, issuer_class, issuer_parent_class|
       let(:issuer) { described_class.new(amount, currency).trade_issuer }
 
       it 'returns the proper issuer', :aggregate_failures do
-        expect(issuer).to be_an_instance_of issuer_class
-        expect(issuer.class.superclass).to be issuer_parent_class
+        expect(issuer).to eq issuer_class
+        expect(issuer.superclass).to be issuer_parent_class
       end
     end
 

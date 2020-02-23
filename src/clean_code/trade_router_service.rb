@@ -3,13 +3,15 @@ class TradeRouterService
   LIQUIDITY_PROVIDER_B = 'lpB'
   LIQUIDITY_PROVIDER_C = 'lpC'
 
-  def initialize(amount, currency)
-    @usd_amount = amount_in_usd(amount, currency)
+  def initialize(amount, currency, rate = 1)
+    @amount = amount
+    @currency = currency.upcase
+    @rate = rate
     @lp = lp
   end
 
   def lp
-    case @usd_amount
+    case amount_in_usd
     when 0..9_999
       LIQUIDITY_PROVIDER_C
     when 10_000..99_999
@@ -24,18 +26,17 @@ class TradeRouterService
   def trade_issuer
     case @lp
     when LIQUIDITY_PROVIDER_A
-      LpATradeIssuerService.new
+      LpATradeIssuerService
     when LIQUIDITY_PROVIDER_B
-      LpBTradeIssuerService.new
+      LpBTradeIssuerService
     when LIQUIDITY_PROVIDER_C
-      LpCTradeIssuerService.new
+      LpCTradeIssuerService
     else
       raise 'unknown liquidity provider'
     end
   end
 
-  def amount_in_usd(amount, currency)
-    # it would return the integer amount in USD
-    amount
+  def amount_in_usd
+    @currency == 'USD' ? @amount : @amount * @rate
   end
 end
