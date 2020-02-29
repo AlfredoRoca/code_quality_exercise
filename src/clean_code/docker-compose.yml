@@ -9,11 +9,15 @@ services:
       - .:/app
     depends_on:
       - redis
+    env_file:
+      - .env.dev
+      - .env
   redis:
     image: "redis:alpine"
     container_name: redis-cq
     ports:
-      - "6379:6379"
+      - "${REDIS_LOCAL_PORT:-6379}"
+      - "${REDIS_PORTS:-$REDIS_LOCAL_PORT:6379}"
     volumes:
       - $PWD/redis-data:/data:delegated
 volumes:

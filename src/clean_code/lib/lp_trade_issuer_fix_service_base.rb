@@ -4,7 +4,7 @@ require_relative './errors.rb'
 
 class LpTradeIssuerFixServiceBase
   def initialize
-    @connection = Redis.new(url: 'redis://0.0.0.0:6379')
+    @connection = Redis.new(url: ENV['REDIS_URL'])
   end
 
   def issue(**params)

@@ -1,9 +1,15 @@
-How to run tests in local
+# Local
 
     bundle install
     bundle exec rspec
 
+# Docker
 
-How to run tests in docker
+    # builds the 2 images: app, redis-cq
+    docker-compose build
 
-    docker-compose up
+    # executes the tests and pretty-prints the results
+    docker-compose run app
+
+    # stops the redis-cq container
+    docker-compose stop

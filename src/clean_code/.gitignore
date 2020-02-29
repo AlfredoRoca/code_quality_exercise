@@ -1,3 +1,4 @@
 vendor
 redis-data
 *.log
+.env

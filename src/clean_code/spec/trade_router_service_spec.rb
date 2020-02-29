@@ -1,5 +1,4 @@
 RSpec.describe TradeRouterService do
-
   describe '#amount_in_usd(order_spec)' do
     it 'returns the converted amount to USD if the spec is BUY USD WITH EUR' do
       trade_spec = {
@@ -165,7 +164,6 @@ RSpec.describe TradeRouterService do
 
         expect { described_class.new(trade_spec).trade_issuer }.to raise_error('unknown liquidity provider')
       end
-
     end
   end
 end
