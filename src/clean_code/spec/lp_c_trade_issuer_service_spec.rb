@@ -26,10 +26,17 @@ RSpec.describe LpCTradeIssuerService do
       }
     }
 
-    it 'fails and do not send data to redis' do
+    it 'calls the service endpoint via HTTP POST request with good params' do
       expect(HTTParty).to receive(:post).with('http://lp_c_host/trade', body:  JSON.dump(payload)).once
 
       TradeExecutionService.new.execute_order(params)
+    end
+
+    it 'returns success false if the HTTP POST raises any error' do
+      stub_request(:post, 'http://lp_c_host/trade').with(body: JSON.dump(payload)).to_raise(StandardError.new('error!'))
+
+      response = LpCTradeIssuerService.new.issue(params)
+      expect(response).to eq({ success: false, error: 'error!' })
     end
   end
 end

@@ -3,10 +3,12 @@ class TradeRouterService
   LIQUIDITY_PROVIDER_B = 'lpB'
   LIQUIDITY_PROVIDER_C = 'lpC'
 
-  def initialize(amount, currency, rate = 1)
-    @amount = amount
-    @currency = currency.upcase
-    @rate = rate
+  def initialize(**trade_spec)
+    @amount = trade_spec[:amount].to_f
+    @currency = trade_spec[:currency].upcase
+    @counter_currency = trade_spec[:counter_currency].upcase
+    @rate = trade_spec[:price].to_f
+    @direction = trade_spec[:side].upcase
     @lp = lp
   end
 
@@ -37,6 +39,7 @@ class TradeRouterService
   end
 
   def amount_in_usd
-    @currency == 'USD' ? @amount : @amount * @rate
+    # for the sake of the scope of this exercise I'm assuming one of the currencies is in USD, so the conversion is direct (no need of using Money)
+    ((@direction == 'BUY' && @currency == 'USD') || (@direction == 'SELL' && @counter_currency == 'USD')) ? @amount : @amount * @rate
   end
 end

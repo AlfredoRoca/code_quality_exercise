@@ -8,11 +8,12 @@ class TradeExecutionService
     @logger = Logger.new('app.log', 10, 10240000)
   end
 
-  def execute_order(**params)
-    return { success: false, error: 'Invalid parameters for an order' } if ParametersValidationService.new(params).invalid?
-    router = TradeRouterService.new(params[:amount], params[:currency], params[:price])
-    trade_issuer = router.trade_issuer.new
-    trade_issuer.issue(params)
+  def execute_order(**trade_spec)
+    return { success: false, error: 'Invalid parameters for an order' } if ParametersValidationService.new(trade_spec).invalid?
+
+    trade_issuer = TradeRouterService.new(trade_spec).trade_issuer
+
+    trade_issuer.new.issue(trade_spec)
 
   rescue => error
     @logger.error(error.message)

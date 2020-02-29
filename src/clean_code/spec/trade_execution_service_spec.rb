@@ -6,7 +6,7 @@ RSpec.describe TradeExecutionService do
         allow_any_instance_of(LpTradeIssuerFixServiceBase).to receive(:fix_service_health_check_ok?) { false }
       end
 
-      it 'fails' do
+      it 'fails even with good params' do
         payload = {
           side: 'buy',
           amount: 10_000_000,

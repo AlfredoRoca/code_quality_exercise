@@ -29,7 +29,7 @@ class LpBTradeIssuerService < LpTradeIssuerFixServiceBase
         handle_fix_trade_confirmation(response)
 
       rescue => error
-        { success: false, error: error }
+        { success: false, error: error.message }
       end
     else
       { success: false, error: FixServiceDown }
