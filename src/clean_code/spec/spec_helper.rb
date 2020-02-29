@@ -17,6 +17,8 @@ RSpec.configure do |config|
 
   require 'pry'
   require 'mock_redis'
+  require 'webmock/rspec'
+  include WebMock
   Dir['./spec/support/**/*.rb'].each { |file| require file }
   require "./lib/lp_trade_issuer_fix_service_base.rb"
   require "./lib/lp_a_trade_issuer_service.rb"
